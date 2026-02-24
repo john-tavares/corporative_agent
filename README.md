@@ -11,7 +11,7 @@ O projeto está estruturado da seguinte forma:
 
 ## Pré-requisitos
 
-Certifique-se de ter o Python 3.8 ou superior instalado em sua máquina.
+Certifique-se de ter o Python 3.12 ou superior instalado em sua máquina.
 
 ## Como Rodar o Projeto
 
