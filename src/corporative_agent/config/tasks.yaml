@@ -25,24 +25,6 @@ compliance_task:
 
   agent: compliance_guardian
 
-direct_answer_task:
-  description: >
-    Provide a clear, accurate, and safe answer to the question below.
-
-    Rules:
-    - Do not hallucinate.
-    - If unsure, say explicitly.
-    - Be concise and structured.
-
-    Question:
-    {user_question}
-
-  expected_output: >
-    A clear and well-structured answer.
-
-  agent: direct_response_specialist
-
-
 rag_answer_task:
   description: >
     Use the retrieved internal document context below to answer the question.
@@ -55,10 +37,22 @@ rag_answer_task:
     Question:
     {user_question}
 
-    Retrieved Context:
-    {retrieved_context}
-
   expected_output: >
     A grounded answer strictly based on internal documents.
 
   agent: knowledge_expert
+
+final_answer_task:
+  description: >
+    Compile the final answer based on the manager's decision and agent outputs.
+
+    Considerations:
+    - Synthesize a coherent final answer for the user.
+    - Use a formal and informative tone.
+    - If compliance_guardian disallowed the question, explain the reason.
+    - Use pt_br language for the answer.
+
+  expected_output: >
+    A final response to the user that is compliant and informative.
+
+  agent: final_answer_compiler

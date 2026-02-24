@@ -1,54 +1,78 @@
-# CorporativeAgent Crew
+# Desafio Técnico - MultiAgent Platform
 
-Welcome to the CorporativeAgent Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Este projeto é uma plataforma de múltiplos agentes desenvolvida como parte de um desafio técnico. Ele utiliza a biblioteca `crewai` para gerenciar agentes e tarefas, permitindo a execução de processos hierárquicos com diferentes agentes especializados.
 
-## Installation
+## Estrutura do Projeto
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+O projeto está estruturado da seguinte forma:
+- **src/corporative_agent/**: Contém o código principal do projeto, incluindo a definição dos agentes, tarefas e o processo de execução.
+- **config/**: Contém os arquivos de configuração para os agentes (`agents.yaml`) e tarefas (`tasks.yaml`).
+- **knowledge/**: Contém arquivos de conhecimento, como o PDF `condicao_de_acionamento.pdf`, utilizado por um dos agentes.
 
-First, if you haven't already, install uv:
+## Pré-requisitos
 
-```bash
-pip install uv
+Certifique-se de ter o Python 3.8 ou superior instalado em sua máquina.
+
+## Como Rodar o Projeto
+
+1. Clone o repositório para sua máquina local:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd corporative_agent
+   ```
+
+2. Crie e ative um ambiente virtual:
+   - No Windows:
+     ```bash
+     python -m venv venv
+     venv\Scripts\activate
+     ```
+   - No Linux/Mac:
+     ```bash
+     python3 -m venv venv
+     source venv/bin/activate
+     ```
+
+3. Instale as dependências do projeto:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Execute o projeto utilizando o comando `crewai`:
+   ```bash
+   crewai run
+   ```
+
+## Arquitetura do Projeto
+```mermaid
+flowchart TD
+    U[User Question] --> M[Manager<br>AI Strategy Orchestrator]
+
+    M --> CG[Compliance Guardian]
+
+    CG -->|Non-Compliant| REJ[Reject / Safe Response]
+    CG -->|Compliant| DECISION{Manager Strategy Decision}
+
+    DECISION -->|Direct Answer| FA1[Final Answer Compiler]
+
+    DECISION -->|Needs RAG| KE[Knowledge Expert<br>RAG Specialist]
+
+    KE --> PDF[pdf_tool<br>PDFSearchTool]
+    PDF --> KE
+
+    KE --> FA2[Final Answer Compiler]
+
+    FA1 --> OUTPUT[Final Response to User]
+    FA2 --> OUTPUT
 ```
+### Arquitetura Hierárquica (Multi-Agente)
 
-Next, navigate to your project directory and install the dependencies:
+Foi adotado o processo hierárquico para separar claramente as responsabilidades entre:
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
+Compliance
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+Retrieval Augmented Generation (RAG)
 
-- Modify `src/corporative_agent/config/agents.yaml` to define your agents
-- Modify `src/corporative_agent/config/tasks.yaml` to define your tasks
-- Modify `src/corporative_agent/crew.py` to add your own logic, tools and specific args
-- Modify `src/corporative_agent/main.py` to add custom inputs for your agents and tasks
+Especialistas de resposta
 
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
-```
-
-This command initializes the corporative_agent Crew, assembling the agents and assigning them tasks as defined in your configuration.
-
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
-
-## Understanding Your Crew
-
-The corporative_agent Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
-
-## Support
-
-For support, questions, or feedback regarding the CorporativeAgent Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+Essa abordagem melhora organização, auditabilidade e facilita evolução futura do sistema.
