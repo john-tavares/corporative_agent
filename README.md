@@ -38,12 +38,16 @@ Certifique-se de ter o Python 3.8 ou superior instalado em sua máquina.
    pip install -r requirements.txt
    ```
 
-4. Execute o projeto utilizando o comando `crewai`:
+4. Configure as variáveis de ambiente:
+   - Crie um arquivo `.env` na raiz do projeto seguindo o padrão do arquivo `example.env`.
+   - Certifique-se de preencher todas as variáveis necessárias.
+
+5. Execute o projeto utilizando o comando `crewai`:
    ```bash
    crewai run
    ```
 
-## Arquitetura do Projeto
+## Decisões e Trade-offs
 ```mermaid
 flowchart TD
     U[User Question] --> M[Manager<br>AI Strategy Orchestrator]
@@ -65,14 +69,42 @@ flowchart TD
     FA1 --> OUTPUT[Final Response to User]
     FA2 --> OUTPUT
 ```
-### Arquitetura Hierárquica (Multi-Agente)
+### Arquitetura Hierárquica
 
 Foi adotado o processo hierárquico para separar claramente as responsabilidades entre:
 
-Compliance
+- Compliance
 
-Retrieval Augmented Generation (RAG)
+- Retrieval Augmented Generation (RAG)
 
-Especialistas de resposta
+- Especialistas de resposta
 
 Essa abordagem melhora organização, auditabilidade e facilita evolução futura do sistema.
+
+### Uso de RAG com Chroma + OpenAI Embeddings
+
+Foi utilizado Chroma como vector store por oferecer:
+
+Persistência simples
+
+Facilidade de uso local
+
+Escalabilidade superior a soluções puramente em memória
+
+Utilização do OpenAI Embeddings foi escolhido pela facilidade de desenvolvimento e sem necessidade de infraestrutura própria.
+
+### Prompt Engineering
+
+Prompts foram organizados por agente/tarefa em arquivos YAML conforme sugerido pelo Crew AI, promovendo clareza arquitetural e manutenção simplificada.
+
+Como estratégia de redução de número de tokens foi utilizado a estratégia de Zero Shot e ReAct, com todo o conteúdo na língua inglesa que tende a ter uma média menor de tokens por palavra.
+
+Dessa forma garantimos um índíce baixo de alucinação, mas com uma latência razoável em relação ao escopo do projeto.
+
+### Evolução
+
+Para evoluir o projeto eu usaria o tracing mode do CrewAI com um handler de logs para trazer uma maior observabilidade para o projeto.
+
+Caso o projeto tivesse maior necessidade de interação com o usuário, poderia ser implementado uma interface usando Streamlit e separando os papeis de backend e frontend.
+
+Poderia ser transformado a aplicação em um worker e ser chamado de forma async pelo backend conforme necessário, trazendo maior escalabilidade.
