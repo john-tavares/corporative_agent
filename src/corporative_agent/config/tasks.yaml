@@ -1,0 +1,64 @@
+compliance_task:
+  description: >
+    Analyze the user question below and determine if it violates policy.
+
+    Prohibited topics:
+    - Politics
+    - Religion
+    - Violence
+    - Drugs
+    - Layoffs / dismissals
+
+    If the content is prohibited, explain why.
+    Return your answer strictly in JSON format:
+
+    {
+      "allowed": true or false,
+      "reason": "short explanation"
+    }
+
+    User Question:
+    {user_question}
+
+  expected_output: >
+    A valid JSON object with allowed and reason fields.
+
+  agent: compliance_guardian
+
+direct_answer_task:
+  description: >
+    Provide a clear, accurate, and safe answer to the question below.
+
+    Rules:
+    - Do not hallucinate.
+    - If unsure, say explicitly.
+    - Be concise and structured.
+
+    Question:
+    {user_question}
+
+  expected_output: >
+    A clear and well-structured answer.
+
+  agent: direct_response_specialist
+
+
+rag_answer_task:
+  description: >
+    Use the retrieved internal document context below to answer the question.
+
+    Rules:
+    - ONLY use provided context.
+    - If answer is not in context, say: "The documents do not contain this information."
+    - Be precise and factual.
+
+    Question:
+    {user_question}
+
+    Retrieved Context:
+    {retrieved_context}
+
+  expected_output: >
+    A grounded answer strictly based on internal documents.
+
+  agent: knowledge_expert
